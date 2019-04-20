@@ -28,11 +28,11 @@ public class BoardGraphic extends JPanel{
         {
             if(i%2 == 0)
             {
-                numColors[i] = new Color(0, 175, 60);
+                numColors[i] = new Color(128, 0, 0);
             }
             else
             {
-                numColors[i] = new Color(175, 0, 255);
+                numColors[i] = new Color(0,70,0);
             }
 
         }
@@ -52,11 +52,11 @@ public class BoardGraphic extends JPanel{
         {
             if(i%2 == 0)
             {
-                numColors[i] = new Color(0, 175, 60);
+                numColors[i] = new Color(128,0,0);
             }
             else
             {
-                numColors[i] = new Color(150, 0, 255);
+                numColors[i] = new Color(0,70,0);
             }
 
         }
@@ -78,11 +78,11 @@ public class BoardGraphic extends JPanel{
                 {
                     if(i%2 == 0)
                     {
-                        numColors[i] = new Color(0, 175, 60);
+                        numColors[i] = new Color(128,0,0);
                     }
                     else
                     {
-                        numColors[i] = new Color(150, 0, 255);
+                        numColors[i] = new Color(0,70,0);
                     }
 
                 }
