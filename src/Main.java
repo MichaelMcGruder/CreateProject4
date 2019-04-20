@@ -26,7 +26,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     private static final int xOrigin = 8;
     private static final int yOrigin = 31;
 
-    public static int width = 542;
+    public static int width = 541;
     public static int height = 563;
     private BoardGraphic boardGraphic = new BoardGraphic();
 
@@ -44,7 +44,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
     //Constructor for JFrame
     public Main() {
-        setTitle("Eight Puzzle (Beta Version)");
+        setTitle("Eight Puzzle v1.0");
         setVisible(true);
         setSize(width, height);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -121,7 +121,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         System.out.println("Solved by Computer in " + solution.size()+ " move(s).");
         System.out.println();
         System.out.println("Left-click screen to follow steps.");
-        System.out.println("Right-click to play again.");
+        System.out.println("Right-click the screen to play again.");
 
         solveStep = 0; //Reset for user
     }
@@ -175,7 +175,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
                     System.out.println("Solved in " + solveTime + " seconds.");
                 }
                 System.out.println();
-                System.out.println("Right-click to play again.");
+                System.out.println("Right-click the screen to play again.");
             }
 
             repaint();
@@ -256,7 +256,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
                 playing = false;
                 System.out.println();
                 System.out.println("Press ENTER key to let the computer solve the board.");
-                System.out.println("Right-click to play again.");
+                System.out.println("Right-click the screen to play again.");
                 repaint();
             }
         }
