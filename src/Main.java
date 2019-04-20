@@ -34,6 +34,9 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     private static boolean solving = false; //Determines if computer is solving the board
     private static boolean forfeited = false;
 
+    private int solveStep = 0;
+    private ArrayList<Integer> solveMoves = new ArrayList<>();
+
     public static void main(String[] args) {
         Main main = new Main();
         main.start();
@@ -102,25 +105,31 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         ArrayList<Integer> solution = s.solve();
         solution.trimToSize();
 
+        solveMoves = solution;
+
+        Board bRef = new Board(b.getBoard());
+
         System.out.println("Step 0");
-        System.out.println(b.toString());
+        System.out.println(bRef.toString());
 
         for (int i = 0; i < solution.size(); i++) {
-                b.move(solution.get(i));
-                System.out.println("Step " + (i + 1));
-                System.out.println(b.toString());
-                repaint();
+            bRef.move(solution.get(i));
+            System.out.println("Step " + (i + 1));
+            System.out.println(bRef.toString());
         }
 
         System.out.println("Solved by Computer in " + solution.size()+ " move(s).");
         System.out.println();
+        System.out.println("Left-click screen to follow steps.");
         System.out.println("Right-click to play again.");
+
+        solveStep = 0; //Reset for user
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(new Color(0,50,0));
+        g.setColor(new Color(0,60,90));
         g.fillRect(xOrigin, yOrigin, 526, 526);
         boardGraphic.setLoc(xOrigin + 6, yOrigin + 6);
         boardGraphic.setBoard(b.getBoard());
@@ -171,6 +180,16 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
             repaint();
 
+        }
+
+        if (e.getButton() == MouseEvent.BUTTON1 && solving)
+        {
+            if (solveStep < solveMoves.size())
+            {
+                b.move(solveMoves.get(solveStep));
+                repaint();
+                solveStep++;
+            }
         }
 
         if (e.getButton() == MouseEvent.BUTTON3 && (forfeited || b.getHeuristic() == 0)) {
@@ -225,7 +244,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         if (e.getKeyChar() == '\n' && forfeited && b.getHeuristic() != 0) //Solves the board if the player has forfeited and the board is unsolved
         {
                 boardGraphic.setMode(0);
-                revalidate();
+                repaint();
                 solve();
         }
         else if (e.getKeyChar() == ' ' && b.getHeuristic() != 0)
