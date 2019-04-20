@@ -205,6 +205,9 @@ public class Board {
             }
         }
 
+        selRow = row;
+        selCol = column;
+
 
         if ((row == blankRow && column != blankCol) || (column == blankCol && row != blankRow))
         {
@@ -223,23 +226,6 @@ public class Board {
     {
         if (movable(number))
         {
-            int selRow = -1, selCol = -1;
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++)
-                {
-                    if (board[i][j] == number)
-                    {
-                        selRow =  i;
-                        selCol= j;
-                        break;
-                    }
-                }
-                if (selCol > -1 && selRow > -1)
-                {
-                    break;
-                }
-            }
-
             if (selRow == blankRow  && selCol != blankCol) //Horizontal moves
             {
                 if (selCol > blankCol)
