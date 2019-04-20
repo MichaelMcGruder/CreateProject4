@@ -129,7 +129,7 @@ public class BoardGraphic extends JPanel{
 
                 if(board.getBoard()[i][j] != 0) {
                     graphics.setColor(numColors[board.getBoard()[i][j]-1]);
-                    graphics.fillRoundRect(x, y, pieceSize, pieceSize, 5, 5);
+                    graphics.fillRoundRect(x, y, pieceSize, pieceSize, 7, 7);
                     graphics.setColor(Color.WHITE);
                     Font f = new Font("Comic Sans",Font.BOLD, 70);
                     FontMetrics fm = getFontMetrics(f);

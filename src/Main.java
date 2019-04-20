@@ -106,10 +106,10 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         System.out.println(b.toString());
 
         for (int i = 0; i < solution.size(); i++) {
-            b.move(solution.get(i));
-            System.out.println("Step " + (i+1));
-            System.out.println(b.toString());
-            repaint();
+                b.move(solution.get(i));
+                System.out.println("Step " + (i + 1));
+                System.out.println(b.toString());
+                repaint();
         }
 
         System.out.println("Solved by Computer in " + solution.size()+ " move(s).");
@@ -120,7 +120,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(Color.black);
+        g.setColor(new Color(0,50,0));
         g.fillRect(xOrigin, yOrigin, 526, 526);
         boardGraphic.setLoc(xOrigin + 6, yOrigin + 6);
         boardGraphic.setBoard(b.getBoard());
@@ -139,7 +139,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
             //Finding the number in the tile clicked
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (x >= xOrigin + 4 + j * 172 && x <= xOrigin +4+ (j + 1) * 172 && y >= yOrigin + 4+ i * 172 && y <= yOrigin + 4 + (i + 1) * 172) {
+                    if (x >= xOrigin + 6 + j * 172 && x <= xOrigin +4+ (j + 1) * 172 && y >= yOrigin + 6+ i * 172 && y <= yOrigin + 4 + (i + 1) * 172) {
                         b.move(b.getBoard()[i][j]);
                         break;
                     }
