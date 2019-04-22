@@ -9,6 +9,7 @@
    by pressing the ENTER key.
   */
 
+import javax.jnlp.IntegrationService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -149,6 +150,10 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (x >= xOrigin + 6 + j * 172 && x <= xOrigin +4+ (j + 1) * 172 && y >= yOrigin + 6+ i * 172 && y <= yOrigin + 4 + (i + 1) * 172) {
+                        if (b.movable(b.getBoard()[i][j]))
+                        {
+                            solveMoves.add(b.getBoard()[i][j]);
+                        }
                         b.move(b.getBoard()[i][j]);
                         break;
                     }
@@ -168,11 +173,11 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
                     seconds = (double) (sec);
                     seconds /= 100;
 
-                    System.out.println("Solved in " + minutes + " minute(s) " +  seconds + " seconds.");
+                    System.out.println("Solved in " + minutes + " minute(s) " +  seconds + " seconds using\n" + solveMoves.size()+ " moves.");
                 }
                 else
                 {
-                    System.out.println("Solved in " + solveTime + " seconds.");
+                    System.out.println("Solved in " + solveTime + " seconds using " + solveMoves.size() + " moves.");
                 }
                 System.out.println();
                 System.out.println("Right-click the screen to play again.");
@@ -196,6 +201,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
             if (!playing) {
                 boardGraphic.setMode(0);
                 startTime = currentTimeMillis();
+                solveMoves = new ArrayList<>();
                 System.out.println();
                 System.out.println("Timer started! Press SPACE to forfeit the game.");
                 b = randomBoard();
@@ -270,5 +276,8 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     public void keyReleased(KeyEvent e)
     {}
 
+    //TODO
+    public void truncate(ArrayList<Integer> s) //Shortens computer moves to player moves in solution
+    { }
 
 }
