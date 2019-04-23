@@ -517,8 +517,8 @@ public class Board {
     public String toString()
     {
         String out = "";
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++){
                     out = out + Integer.toString(board[i][j]) + " ";
 
             }

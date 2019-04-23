@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 public class BoardGraphic extends JPanel{
     /*
@@ -14,17 +15,18 @@ public class BoardGraphic extends JPanel{
 
 
     private final int spacing = 4;
-    private final int pieceSize = 168;
+    private int pieceSize = 126;
+    private int tileLength = 3;
 
-    private final int boardSize = 3*spacing + 3*pieceSize;
+    private final int boardSize = tileLength*spacing + tileLength*pieceSize;
 
-    private Color[] numColors = new Color[8];
+    private final Color[] numColors = new Color[99];
 
     private int boardMode = 0;
 
     public BoardGraphic(){
         //Init numColors
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < (tileLength * tileLength) - 1; i++)
         {
             if(i%2 == 0)
             {
@@ -32,7 +34,7 @@ public class BoardGraphic extends JPanel{
             }
             else
             {
-                numColors[i] = new Color(0,70,0);
+                numColors[i]  = new Color(0,70,0);
             }
 
         }
@@ -48,19 +50,25 @@ public class BoardGraphic extends JPanel{
         setBounds(x_init-2, y_init-2, Main.width, Main.height);
 
         //Init numColors
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < (tileLength*tileLength) - 1; i++)
         {
             if(i%2 == 0)
             {
-                numColors[i] = new Color(128,0,0);
+                numColors[i] = new Color(128, 0, 0);
             }
             else
             {
-                numColors[i] = new Color(0,70,0);
+                numColors[i]  = new Color(0,70,0);
             }
 
         }
     }
+
+    public void setTileLength(int x)
+    {
+        tileLength = x;
+    }
+
 
     public void setLoc(int x, int y)
     {
@@ -74,22 +82,22 @@ public class BoardGraphic extends JPanel{
         {
             default:
                 boardMode = 0;
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < (tileLength*tileLength) - 1; i++)
                 {
                     if(i%2 == 0)
                     {
-                        numColors[i] = new Color(128,0,0);
+                        numColors[i] = new Color(128, 0, 0);
                     }
                     else
                     {
-                        numColors[i] = new Color(0,70,0);
+                        numColors[i]  = new Color(0,70,0);
                     }
 
                 }
                 break;
 
             case 1: //Winning state
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < (tileLength*tileLength) - 1; i++)
                 {
                     numColors[i] = new Color(255, 255, 0);
 
@@ -97,7 +105,7 @@ public class BoardGraphic extends JPanel{
                 break;
 
             case 2: //Forfeit state
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < (tileLength*tileLength) - 1; i++)
                 {
                     numColors[i] = new Color(255, 0, 0);
 
@@ -110,6 +118,11 @@ public class BoardGraphic extends JPanel{
     public void setBoard(int[][] b)
     {
         board = new Board(b);
+
+        //Update size
+        setTileLength(board.getBoard().length);
+
+        pieceSize = (528/tileLength)-spacing;
     }
 
 
@@ -120,10 +133,22 @@ public class BoardGraphic extends JPanel{
         int x = xPos;
         int y = yPos;
 
-
-        for (int i = 0; i < board.getSize(); i++)
+        int fontSize = 0;
+        if (tileLength >= 2 && tileLength <= 6)
         {
-            for (int j = 0; j < board.getSize(); j++)
+            fontSize = 70;
+        }
+        else if (tileLength > 6 && tileLength <=8)
+        {
+            fontSize = 50;
+        }
+        else{
+            fontSize = 40;
+        }
+
+        for (int i = 0; i < tileLength; i++)
+        {
+            for (int j = 0; j < tileLength; j++)
             {
                 //Draw game piece with spacing if not at the final iteration (except 0)
 
@@ -131,10 +156,11 @@ public class BoardGraphic extends JPanel{
                     graphics.setColor(numColors[board.getBoard()[i][j]-1]);
                     graphics.fillRoundRect(x, y, pieceSize, pieceSize, 10, 10);
                     graphics.setColor(Color.white);
-                    Font f = new Font("Comic Sans",Font.BOLD, 70);
+                    Font f = new Font("Comic Sans",Font.BOLD, fontSize);
                     FontMetrics fm = getFontMetrics(f);
                     graphics.setFont(f);
-                    Rectangle2D r = fm.getStringBounds("1",graphics);graphics.drawString(Integer.toString(board.getBoard()[i][j]), x + (pieceSize / 2) - ((int) (r.getWidth()/2)), y + (pieceSize / 2) + ((int) (r.getHeight()/2))-10);
+                    Rectangle2D r = fm.getStringBounds(Integer.toString(board.getBoard()[i][j]),graphics);
+                    graphics.drawString(Integer.toString(board.getBoard()[i][j]), x + (pieceSize / 2) - ((int) (r.getWidth()/2)), y + (pieceSize / 2) + ((int) (r.getHeight()/2))-10);
                 }
                 if (j != board.getSize()-1)
                 {

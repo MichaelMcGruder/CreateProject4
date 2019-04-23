@@ -9,7 +9,6 @@ public class BoardComparator implements Comparator<Board>
     @Override
 
     public int compare(Board b1, Board b2)
-
     {
         if (b1.getCost() > b2.getCost())
         {

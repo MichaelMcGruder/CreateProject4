@@ -20,15 +20,15 @@ import java.util.Timer;
 import static java.lang.System.currentTimeMillis;
 
 public class Main extends JFrame implements  MouseListener, KeyListener{
-    static Board b = randomBoard();
+    Board b = randomBoard();
     long startTime = currentTimeMillis();
 
     //Origin point
     private static final int xOrigin = 8;
     private static final int yOrigin = 31;
 
-    public static int width = 541;
-    public static int height = 563;
+    public static int width = 551;
+    public static int height = 573;
     private BoardGraphic boardGraphic = new BoardGraphic();
 
     private static boolean playing = true; //Determines if user is playing a game
@@ -37,6 +37,8 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
     private int solveStep = 0;
     private ArrayList<Integer> solveMoves = new ArrayList<>();
+
+    private final int tileLength = 3;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -67,14 +69,14 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     }
 
     //Generates random board for the computer
-    public static Board randomBoard() {
-        int[][] board = new int[3][3];
+    public Board randomBoard() {
+        int[][] board = new int[tileLength][tileLength];
 
         //Random scramble algorithm
 
-        //Create solved 3x3 board
-        for (int i = 0; i < 9; i++) {
-            board[i / 3][i % 3] = (i + 1) % 9;
+        //Create solved nxn board
+        for (int i = 0; i <tileLength*tileLength ; i++) {
+            board[i / tileLength][i % tileLength] = (i + 1) % (tileLength*tileLength);
         }
 
         Board b = new Board(board);
@@ -84,7 +86,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
         int parity = r.nextInt(2);
 
-        for (int i = 0; i < 50 + parity; i++) {
+        for (int i = 0; i < 1000 + parity; i++) {
             ArrayList<Board> children = b.getSuccessors();
             children.trimToSize();
             int count = children.size();
@@ -131,11 +133,10 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(new Color(0,60,90));
-        g.fillRect(xOrigin, yOrigin, 526, 526);
+        g.fillRect(xOrigin, yOrigin, 536, 536);
         boardGraphic.setLoc(xOrigin + 6, yOrigin + 6);
         boardGraphic.setBoard(b.getBoard());
         boardGraphic.drawBoard(g);
-
     }
 
     @Override
@@ -147,9 +148,9 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
         if (x >= xOrigin && x <= xOrigin + width && y >= yOrigin && y <= yOrigin + width && e.getButton() == MouseEvent.BUTTON1 && playing && !forfeited) {
             //Finding the number in the tile clicked
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (x >= xOrigin + 6 + j * 172 && x <= xOrigin +4+ (j + 1) * 172 && y >= yOrigin + 6+ i * 172 && y <= yOrigin + 4 + (i + 1) * 172) {
+            for (int i = 0; i < tileLength; i++) {
+                for (int j = 0; j < tileLength; j++) {
+                    if (x >= xOrigin + 6 + j * (528/tileLength) && x <= xOrigin +4+ (j + 1) * (528/tileLength) && y >= yOrigin + 6+ i * (528/tileLength) && y <= yOrigin + 4 + (i + 1) * (528/tileLength)) {
                         if (b.movable(b.getBoard()[i][j]))
                         {
                             solveMoves.add(b.getBoard()[i][j]);
@@ -276,8 +277,5 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     public void keyReleased(KeyEvent e)
     {}
 
-    //TODO
-    public void truncate(ArrayList<Integer> s) //Shortens computer moves to player moves in solution
-    { }
 
 }
