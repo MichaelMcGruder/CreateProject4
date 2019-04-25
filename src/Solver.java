@@ -238,85 +238,39 @@ public class Solver {
 
         {
 
-            return null;
+            return null; //No solution
 
         }
 
 
-
+        //Move backtracking algorithm
         ArrayList<Integer> solveSteps = new ArrayList<>();
 
-
-
-        while (solved != null)
-
+        while(solved.getParent() != null)
         {
+            //Find the blank space
+            int column = -1, row = -1;
 
-            if (solved.getParent() != null)
-
+            for (int i = 0; i < solved.getSize(); i++)
             {
-
-                for (int i = 0; i < solved.getSize(); i++)
-
+                for(int j = 0; j < solved.getSize(); j++)
                 {
-
-                    int step = -1;
-
-                    for (int j = 0; j < solved.getSize(); j++)
-
+                    if(solved.getBoard()[i][j] == 0)
                     {
-
-                        if(solved.getParent().getBoard()[i][j] != solved.getBoard()[i][j])
-
-                        {
-
-                            if (solved.getBoard()[i][j] == 0)
-
-                            {
-
-                                step = solved.getParent().getBoard()[i][j];
-
-                                solveSteps.add(solved.getParent().getBoard()[i][j]);
-
-                                break;
-
-                            }
-
-                            else
-
-                            {
-
-                                step = solved.getBoard()[i][j];
-
-                                solveSteps.add(solved.getBoard()[i][j]);
-
-                                break;
-
-                            }
-
-                        }
-
-                    }
-
-                    if(step != -1)
-
-                    {
-
+                        column = i;
+                        row = j;
                         break;
-
                     }
-
                 }
-
-
-
+                if (row != -1)
+                {
+                    break;
+                }
             }
 
+            solveSteps.add(solved.getParent().getBoard()[column][row]);
             solved = solved.getParent();
-
         }
-
-
 
         return reverse(solveSteps);
 

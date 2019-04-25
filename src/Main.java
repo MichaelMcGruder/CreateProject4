@@ -9,13 +9,11 @@
    by pressing the ENTER key.
   */
 
-import javax.jnlp.IntegrationService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.lang.*;
-import java.util.Timer;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -27,13 +25,14 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     private static final int xOrigin = 8;
     private static final int yOrigin = 31;
 
-    public static int width = 551;
-    public static int height = 573;
+    public static int width = 444; //-16 pixels
+    public static int height = 467;//-39 pixels
     private BoardGraphic boardGraphic = new BoardGraphic();
 
-    private static boolean playing = true; //Determines if user is playing a game
+    private static boolean timerStarted = false; //Determines if user is timerStarted a game
     private static boolean solving = false; //Determines if computer is solving the board
     private static boolean forfeited = false;
+    private static boolean playing = true;
 
     private int solveStep = 0;
     private ArrayList<Integer> solveMoves = new ArrayList<>();
@@ -59,13 +58,22 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     }
 
     public void start() {
-        startTime = currentTimeMillis();
-        System.out.println("Timer started! Press SPACE to forfeit the game.");
-        b = randomBoard();
-        playing = true;
-        solving = false;
-        forfeited = false;
-        repaint();
+        System.out.println("Hello player. In front of you is a 3 x 3 grid of tiles numbered from 1 to 8, and \n" +
+                "the goal is to put the tiles in increasing order from left to right and top to bottom \n" +
+                "as shown below. \n");
+
+        int[][] sample = {{1,2,3},{4,5,6},{7,8,0}};
+        Board sampleBoard = new Board(sample);
+
+        System.out.println(sampleBoard.toString());
+
+        System.out.println("After you have solved the board or you have forfeited by pressing the SPACE key, you can \n" +
+                "right-click to generate a new board and press enter to start the timer again.\n\n" +
+                " If you ever have any trouble, you can request the computer\n" +
+                "to solve the board by forfeiting and pressing ENTER to let the computer walk you through a solution. \n\n" +
+                " When you are ready, PRESS ENTER KEY TO START THE TIMER. ");
+
+
     }
 
     //Generates random board for the computer
@@ -86,7 +94,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
         int parity = r.nextInt(2);
 
-        for (int i = 0; i < 1000 + parity; i++) {
+        for (int i = 0; i < 50 + parity; i++) {
             ArrayList<Board> children = b.getSuccessors();
             children.trimToSize();
             int count = children.size();
@@ -102,10 +110,15 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
     public void solve() {
         System.out.println("Solving...");
-        playing = false;
         solving = true;
         Solver s = new Solver(b.getBoard());
         ArrayList<Integer> solution = s.solve();
+
+        System.out.println("Printing solution...");
+        try{
+            Thread.sleep(300);
+        }catch (Exception e){}
+
         solution.trimToSize();
 
         solveMoves = solution;
@@ -121,8 +134,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
             System.out.println(bRef.toString());
         }
 
-        System.out.println("Solved by Computer in " + solution.size()+ " move(s).");
-        System.out.println();
+        System.out.println("Solved by Computer in " + solution.size()+ " move(s).\n");
         System.out.println("Left-click screen to follow steps.");
         System.out.println("Right-click the screen to play again.");
 
@@ -133,7 +145,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(new Color(0,60,90));
-        g.fillRect(xOrigin, yOrigin, 536, 536);
+        g.fillRect(xOrigin, yOrigin, 428, 428);
         boardGraphic.setLoc(xOrigin + 6, yOrigin + 6);
         boardGraphic.setBoard(b.getBoard());
         boardGraphic.drawBoard(g);
@@ -144,13 +156,13 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         int x = e.getX();
         int y = e.getY();
 
-        //Checking if the mouse is in the playing field
+        //Checking if the mouse is in the timerStarted field
 
-        if (x >= xOrigin && x <= xOrigin + width && y >= yOrigin && y <= yOrigin + width && e.getButton() == MouseEvent.BUTTON1 && playing && !forfeited) {
+        if (x >= xOrigin && x <= xOrigin + width && y >= yOrigin && y <= yOrigin + width && e.getButton() == MouseEvent.BUTTON1 && timerStarted && !forfeited) {
             //Finding the number in the tile clicked
             for (int i = 0; i < tileLength; i++) {
                 for (int j = 0; j < tileLength; j++) {
-                    if (x >= xOrigin + 6 + j * (528/tileLength) && x <= xOrigin +4+ (j + 1) * (528/tileLength) && y >= yOrigin + 6+ i * (528/tileLength) && y <= yOrigin + 4 + (i + 1) * (528/tileLength)) {
+                    if (x >= xOrigin + 6 + j * (420/tileLength) && x <= xOrigin +6 + BoardGraphic.pieceSize + j * (420/tileLength) && y >= yOrigin + 6 + i * (420/tileLength) && y <= yOrigin + 6 + BoardGraphic.pieceSize + i * (420/tileLength)) {
                         if (b.movable(b.getBoard()[i][j]))
                         {
                             solveMoves.add(b.getBoard()[i][j]);
@@ -161,7 +173,9 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
                 }
             }
 
+            //Check if the user solved the board
             if (b.getHeuristic() == 0) {
+                timerStarted = false;
                 playing = false;
                 double solveTime = (double) (currentTimeMillis() - startTime) / 1000;
 
@@ -188,27 +202,27 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
         }
 
+
         if (e.getButton() == MouseEvent.BUTTON1 && solving)
         {
-            if (solveStep < solveMoves.size())
-            {
-                b.move(solveMoves.get(solveStep));
-                repaint();
-                solveStep++;
-            }
+                if (solveStep < solveMoves.size()) {
+                    b.move(solveMoves.get(solveStep));
+                    repaint();
+                    solveStep++;
+                }
         }
 
+        //Right to restart the game
         if (e.getButton() == MouseEvent.BUTTON3 && (forfeited || b.getHeuristic() == 0)) {
-            if (!playing) {
+            if (!timerStarted) {
                 boardGraphic.setMode(0);
-                startTime = currentTimeMillis();
+                forfeited = false;
+                solving = false;
+                playing = true;
+                b = randomBoard();
                 solveMoves = new ArrayList<>();
                 System.out.println();
-                System.out.println("Timer started! Press SPACE to forfeit the game.");
-                b = randomBoard();
-                playing = true;
-                solving = false;
-                forfeited = false;
+                System.out.println("Press ENTER to start the timer.");
                 repaint();
             }
         }
@@ -247,6 +261,14 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     @Override
     public void keyTyped(KeyEvent e)
     {
+        if (!timerStarted && !forfeited && !solving && playing && e.getKeyChar() == '\n')
+        {
+            startTime = currentTimeMillis();
+            System.out.println("\nTimer started! Press SPACE to forfeit the game.");
+            timerStarted = true;
+            solving = false;
+            forfeited = false;
+        }
 
         if (e.getKeyChar() == '\n' && forfeited && b.getHeuristic() != 0) //Solves the board if the player has forfeited and the board is unsolved
         {
@@ -254,13 +276,14 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
                 repaint();
                 solve();
         }
-        else if (e.getKeyChar() == ' ' && b.getHeuristic() != 0)
+
+        if (e.getKeyChar() == ' ' && b.getHeuristic() != 0)
         {
             if (!forfeited) {
                 boardGraphic.setMode(2);
                 System.out.println("Forfeited");
                 forfeited = true;
-                playing = false;
+                timerStarted = false;
                 System.out.println();
                 System.out.println("Press ENTER key to let the computer solve the board.");
                 System.out.println("Right-click the screen to play again.");

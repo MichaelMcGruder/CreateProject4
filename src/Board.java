@@ -272,110 +272,6 @@ public class Board {
 
     }
 
-    //Computer moves
-    private boolean compMovable(int number)
-    {
-        //Down
-        try
-        {
-            if(board[blankRow - 1][blankCol] == number)
-            {
-                return true;
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){}
-
-        //Up
-        try
-        {
-            if(board[blankRow + 1][blankCol] == number)
-            {
-                return true;
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){}
-
-        //Left
-        try
-        {
-            if(board[blankRow][blankCol + 1] == number)
-            {
-                return true;
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){}
-
-        //Right
-        try
-        {
-            if(board[blankRow][blankCol - 1] == number)
-            {
-                return true;
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){}
-
-        return false;
-    }
-
-
-    private void compMove(int number)
-    {
-        //Down
-        try
-        {
-            if(board[blankRow - 1][blankCol] == number)
-            {
-                board[blankRow][blankCol] = board[blankRow - 1][blankCol];
-                board[blankRow - 1][blankCol] = 0;
-                blankRow--;
-                return;
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){}
-
-        //Up
-        try
-        {
-            if(board[blankRow + 1][blankCol] == number)
-            {
-                board[blankRow][blankCol] = board[blankRow + 1][blankCol];
-                board[blankRow + 1][blankCol] = 0;
-                blankRow++;
-                return;
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){}
-
-        //Left
-        try
-        {
-            if(board[blankRow][blankCol + 1] == number)
-            {
-                board[blankRow][blankCol] = board[blankRow][blankCol + 1];
-                board[blankRow][blankCol + 1] = 0;
-                blankCol++;
-                return;
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){}
-
-        //Right
-        try
-        {
-            if(board[blankRow][blankCol - 1] == number)
-            {
-                board[blankRow][blankCol] = board[blankRow][blankCol - 1];
-                board[blankRow][blankCol - 1] = 0;
-                blankCol--;
-                return;
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){}
-    }
-
-
-
     public Board getCopy()
 
     {
@@ -404,18 +300,18 @@ public class Board {
         for (int i = 1; i < board.length*board.length; i++)
 
         {
-            if (bRef.compMovable(i))
+            if (bRef.movable(i))
 
             {
+
 
                 Board copy = bRef.getCopy();
 
                 copy.setParent(bRef);
 
-                copy.compMove(i);
+                copy.move(i);
 
                 copy.incGScore();
-
                 successors.add(copy);
 
             }
@@ -519,8 +415,14 @@ public class Board {
         String out = "";
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++){
-                    out = out + Integer.toString(board[i][j]) + " ";
-
+                    if(board[i][j] != 0)
+                    {
+                        out = out + Integer.toString(board[i][j]) + " ";
+                    }
+                    else
+                    {
+                        out = out + "* ";
+                    }
             }
              out = out + "\n";
         }

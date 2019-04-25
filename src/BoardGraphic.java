@@ -15,8 +15,8 @@ public class BoardGraphic extends JPanel{
 
 
     private final int spacing = 4;
-    private int pieceSize = 126;
-    private int tileLength = 3;
+    public static int pieceSize;
+    private int tileLength = 7;
 
     private final int boardSize = tileLength*spacing + tileLength*pieceSize;
 
@@ -122,7 +122,7 @@ public class BoardGraphic extends JPanel{
         //Update size
         setTileLength(board.getBoard().length);
 
-        pieceSize = (528/tileLength)-spacing;
+        pieceSize = (420/tileLength)-spacing;
     }
 
 
