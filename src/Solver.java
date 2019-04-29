@@ -13,7 +13,7 @@ public class Solver {
 
 
 
-
+    //Loaded Solver constructor
     public Solver(int[][] start)
 
     {
@@ -21,7 +21,7 @@ public class Solver {
     }
 
 
-
+    //Determines if a board is in the open list
     private boolean inOpenList(Board board)
 
     {
@@ -44,7 +44,7 @@ public class Solver {
     }
 
 
-
+    //Determines if a board is in the closed list
     private boolean inClosedList(Board board)
 
     {
@@ -67,7 +67,7 @@ public class Solver {
     }
 
 
-
+    //Reverts the order of elements in an ArrayList
     private ArrayList<Integer> reverse(ArrayList<Integer> list)
 
     {
@@ -92,12 +92,7 @@ public class Solver {
 
 
 
-
-
-
-
-
-
+    //Returns an ArrayList of order moves to solve the board given to a Solver object
     public ArrayList<Integer> solve()
 
     {
@@ -109,9 +104,8 @@ public class Solver {
         Board solved = root;
 
 
-
+        //Make sure starting board is solvable
         if (root.solvable())
-
         {
 
             int heuristic = 1;
@@ -123,10 +117,6 @@ public class Solver {
                 solved = openList.poll();
 
                 heuristic = solved.getHeuristic();
-
-                //System.out.println(solved.getgScore());
-
-
 
                 if (heuristic == 0)
 

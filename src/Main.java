@@ -25,8 +25,8 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     private static final int xOrigin = 8;
     private static final int yOrigin = 31;
 
-    public static int width = 444; //-16 pixels
-    public static int height = 467;//-39 pixels
+    public static int width = 444; //-16 pixel offset
+    public static int height = 467;//-39 pixel offset
     private BoardGraphic boardGraphic = new BoardGraphic();
 
     private static boolean timerStarted = false; //Determines if user is timerStarted a game
@@ -39,6 +39,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
 
     private final int tileLength = 3;
 
+    //Makes a class object for the JFrame
     public static void main(String[] args) {
         Main main = new Main();
         main.start();
@@ -57,6 +58,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         addKeyListener(this);
     }
 
+    //Starts the game with prompt and window
     public void start() {
         System.out.println("Hello player. In front of you is a 3 x 3 grid of tiles numbered from 1 to 8, and \n" +
                 "the goal is to put the tiles in increasing order from left to right and top to bottom \n" +
@@ -68,10 +70,10 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         System.out.println(sampleBoard.toString());
 
         System.out.println("After you have solved the board or you have forfeited by pressing the SPACE key, you can \n" +
-                "right-click to generate a new board and press enter to start the timer again.\n\n" +
-                " If you ever have any trouble, you can request the computer\n" +
+                "right-click to generate a new board and then press enter to start the timer again.\n\n" +
+                "If you ever have any trouble, you can request the computer\n" +
                 "to solve the board by forfeiting and pressing ENTER to let the computer walk you through a solution. \n\n" +
-                " When you are ready, PRESS ENTER KEY TO START THE TIMER. ");
+                "When you are ready, PRESS ENTER KEY TO START THE TIMER OR PRESS SPACE TO FORFEIT AND TRY ANOTHER BOARD. ");
 
 
     }
@@ -103,11 +105,12 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         }
 
         b.setParent(null);
-        b.setgScore(0);
+        b.setGScore(0);
 
         return b;
     }
 
+    //Solves a specific board configuration
     public void solve() {
         System.out.println("Solving...");
         solving = true;
@@ -141,6 +144,7 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         solveStep = 0; //Reset for user
     }
 
+    //Handles graphics
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -151,6 +155,11 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
         boardGraphic.drawBoard(g);
     }
 
+
+    /*
+    User input
+     */
+    //Controls mouse commands
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
@@ -227,14 +236,47 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
             }
         }
 
-
-        /*
-        Debugging:
-        System.out.println(x + "," + y);
-         */
-
     }
 
+
+    //Controls keyboard commands
+    @Override
+    public void keyTyped(KeyEvent e)
+    {
+        if (!timerStarted && !forfeited && !solving && playing && e.getKeyChar() == '\n') //Starts the timer if it has not already started and the player has just scrambled the board
+        {
+            startTime = currentTimeMillis();
+            System.out.println("\nTimer started! Press SPACE to forfeit the game.");
+            timerStarted = true;
+            solving = false;
+            forfeited = false;
+        }
+
+        if (e.getKeyChar() == '\n' && forfeited && b.getHeuristic() != 0) //Solves the board if the player has forfeited and the board is unsolved
+        {
+                boardGraphic.setMode(0);
+                repaint();
+                solve();
+        }
+
+        if (e.getKeyChar() == ' ' && b.getHeuristic() != 0 && timerStarted) //Forfeits the game while the timer is started and hasn't solved the board
+        {
+            if (!forfeited) {
+                boardGraphic.setMode(2);
+                System.out.println("Forfeited");
+                forfeited = true;
+                timerStarted = false;
+                System.out.println();
+                System.out.println("Press ENTER key to let the computer solve the board.");
+                System.out.println("Right-click the screen to play again.");
+                repaint();
+            }
+        }
+    }
+
+    /*
+    Unused event handling methods
+     */
     @Override
     public void mouseEntered(MouseEvent e) {
 
@@ -257,41 +299,6 @@ public class Main extends JFrame implements  MouseListener, KeyListener{
     public void mouseExited(MouseEvent e) {
 
     }
-
-    @Override
-    public void keyTyped(KeyEvent e)
-    {
-        if (!timerStarted && !forfeited && !solving && playing && e.getKeyChar() == '\n')
-        {
-            startTime = currentTimeMillis();
-            System.out.println("\nTimer started! Press SPACE to forfeit the game.");
-            timerStarted = true;
-            solving = false;
-            forfeited = false;
-        }
-
-        if (e.getKeyChar() == '\n' && forfeited && b.getHeuristic() != 0) //Solves the board if the player has forfeited and the board is unsolved
-        {
-                boardGraphic.setMode(0);
-                repaint();
-                solve();
-        }
-
-        if (e.getKeyChar() == ' ' && b.getHeuristic() != 0)
-        {
-            if (!forfeited) {
-                boardGraphic.setMode(2);
-                System.out.println("Forfeited");
-                forfeited = true;
-                timerStarted = false;
-                System.out.println();
-                System.out.println("Press ENTER key to let the computer solve the board.");
-                System.out.println("Right-click the screen to play again.");
-                repaint();
-            }
-        }
-    }
-
 
 
     public void keyPressed(KeyEvent e)

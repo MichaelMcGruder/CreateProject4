@@ -16,6 +16,7 @@ public class Board {
 
     private int selRow, selCol;
 
+    //Board constructor
     public Board(int[][] newBoard)
 
     {
@@ -42,9 +43,11 @@ public class Board {
     }
 
 
+    /*
+    Accessor methods
+    */
 
-    //Accessor methods
-
+    //Returns the currents
     public int[][] getBoard()
 
     {
@@ -62,7 +65,7 @@ public class Board {
     }
 
 
-
+    //Calculate current heuristic for the board
     public int getHeuristic()
 
     {
@@ -100,7 +103,7 @@ public class Board {
     }
 
 
-
+    //Returns the gScore (# of moves performed)
     public int getgScore()
 
     {
@@ -110,9 +113,7 @@ public class Board {
     }
 
 
-
-
-
+    //Returns heuristic + gScore for A*
     public int getCost()
 
     {
@@ -122,7 +123,7 @@ public class Board {
     }
 
 
-
+    //Returns current size n of the n by n board
     public int getSize()
 
     {
@@ -132,7 +133,7 @@ public class Board {
     }
 
 
-
+    //Returns parent board
     public Board getParent()
 
     {
@@ -147,7 +148,11 @@ public class Board {
 
 
 
-    //Mutator methods
+    /*
+    Mutator methods
+     */
+
+    //Sets parent board
     public void setParent(Board board)
 
     {
@@ -157,21 +162,19 @@ public class Board {
     }
 
 
-
-    public void setgScore(int gScore) {
+    //Sets gScore
+    public void setGScore(int gScore) {
 
         this.gScore = gScore;
 
     }
 
 
-
+    //Increments gScore by 1
     public void incGScore()
 
     {
-
         gScore++;
-
     }
 
 
@@ -184,7 +187,7 @@ public class Board {
 
     //Changing the board (for both the computer and the player)
 
-    //Player moves
+    //Determines if a tile can be moved
     public boolean movable(int number)
 
     {
@@ -220,7 +223,7 @@ public class Board {
     }
 
 
-
+    //Moves a tile if it is movable
     public void move(int number)
 
     {
@@ -272,6 +275,7 @@ public class Board {
 
     }
 
+    //Returns a copy of the current board
     public Board getCopy()
 
     {
@@ -280,41 +284,36 @@ public class Board {
 
         copy.setParent(parent);
 
-        copy.setgScore(gScore);
+        copy.setGScore(gScore);
 
         return copy;
 
     }
 
-    //Return an array list of next possible board positions
+    //Returns an array list of next possible board positions
     public ArrayList<Board> getSuccessors()
 
     {
         //Reference board for the board that is running getSuccessors
         Board bRef = new Board(board);
         bRef.setParent(parent);
-        bRef.setgScore(gScore);
+        bRef.setGScore(gScore);
         ArrayList<Board> successors = new ArrayList<>();
 
 
         for (int i = 1; i < board.length*board.length; i++)
 
         {
-            if (bRef.movable(i))
-
-            {
-
-
-                Board copy = bRef.getCopy();
-
-                copy.setParent(bRef);
-
+                Board copy = bRef.getCopy(); //Creates a second copy (different object) of bRef
                 copy.move(i);
 
-                copy.incGScore();
-                successors.add(copy);
-
-            }
+                //Only adds the copy to the successor list if it has a different configuration than bRef
+                if (!copy.boardEquals(bRef))
+                {
+                    copy.setParent(bRef);
+                    copy.incGScore();
+                    successors.add(copy);
+                }
 
         }
 
@@ -326,7 +325,7 @@ public class Board {
 
 
 
-    //Solvable boolean
+    //Boolean that determines if the current board is solvable
 
     public boolean solvable() {
 
@@ -410,6 +409,7 @@ public class Board {
 
     }
 
+    //Converts board to a string
     public String toString()
     {
         String out = "";
@@ -430,8 +430,7 @@ public class Board {
         return out;
     }
 
-
-
+    //Determines if two boards have the same configuration
     public boolean boardEquals(Board b)
 
     {

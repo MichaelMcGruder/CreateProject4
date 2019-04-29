@@ -20,10 +20,11 @@ public class BoardGraphic extends JPanel{
 
     private final int boardSize = tileLength*spacing + tileLength*pieceSize;
 
-    private final Color[] numColors = new Color[99];
+    private final Color[] numColors = new Color[48];
 
     private int boardMode = 0;
 
+    //BoardGraphic constructor
     public BoardGraphic(){
         //Init numColors
         for (int i = 0; i < (tileLength * tileLength) - 1; i++)
@@ -40,7 +41,7 @@ public class BoardGraphic extends JPanel{
         }
     }
 
-
+    //Loaded BoardGraphic constructor
     public BoardGraphic(int x_init, int y_init , int[][] newBoard)
     {
         xPos = x_init;
@@ -64,18 +65,20 @@ public class BoardGraphic extends JPanel{
         }
     }
 
+    //Adjusts the size of the board
     public void setTileLength(int x)
     {
         tileLength = x;
     }
 
-
+    //Set the location of the board on the screen
     public void setLoc(int x, int y)
     {
         xPos = x;
         yPos = y;
     }
 
+    //Changes the color scheme of the board
     public void setMode(int mode)
     {
         switch (mode)
@@ -114,7 +117,7 @@ public class BoardGraphic extends JPanel{
         }
     }
 
-
+    //Changes the current board
     public void setBoard(int[][] b)
     {
         board = new Board(b);
@@ -126,7 +129,7 @@ public class BoardGraphic extends JPanel{
     }
 
 
-
+    //Draws the board on the screen
     public void drawBoard(Graphics graphics)
     {
         //Initializing the first piece position
@@ -143,7 +146,7 @@ public class BoardGraphic extends JPanel{
             fontSize = 50;
         }
         else{
-            fontSize = 40;
+            fontSize = 30;
         }
 
         for (int i = 0; i < tileLength; i++)
@@ -154,7 +157,7 @@ public class BoardGraphic extends JPanel{
 
                 if(board.getBoard()[i][j] != 0) {
                     graphics.setColor(numColors[board.getBoard()[i][j]-1]);
-                    graphics.fillRoundRect(x, y, pieceSize, pieceSize, 10, 10);
+                    graphics.fillRoundRect(x, y, pieceSize, pieceSize, 15, 15);
                     graphics.setColor(Color.white);
                     Font f = new Font("Comic Sans",Font.BOLD, fontSize);
                     FontMetrics fm = getFontMetrics(f);
